@@ -11,10 +11,11 @@ namespace GaussianMapRender
     {
         private String FilePath;
         private System.IO.StreamReader FileReader;
-        private ArrayList AlphaValueData; 
+        public ArrayList AlphaValueData { get; }
 
         public AlphaValueParser() { }
 
+        /// <param name="filePath">File path of alpha values</param>
         public AlphaValueParser(String filePath)
         {
             this.FilePath = filePath;
