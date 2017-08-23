@@ -100,10 +100,8 @@ namespace GaussianMapRender
             string URL = @"C:\Users\DevWork\Desktop\";
             string URL_ALPHA_VALUES = URL + "1.txt";
 
-            CoordinateParser p = new CoordinateParser(URL + "lat.txt", URL + "long.txt");
-            p.ParseFile();
-            p.PrintCoordinates();
-
+            ParserManager P = new ParserManager();
+            P.execute();
         }
 
         // returns bitmap: circle img

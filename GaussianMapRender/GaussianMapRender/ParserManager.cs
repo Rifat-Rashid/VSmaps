@@ -21,8 +21,8 @@ namespace GaussianMapRender
 
         public ParserManager()
         {
-            this.coordinateParser = new CoordinateParser(RootURL + "lat.txt", RootURL + "long.txt");
-            this.alphaValueParser = new AlphaValueParser(RootURL + "p_1.txt");
+            this.coordinateParser = new CoordinateParser(@"C: \Users\DevWork\Desktop\example\lat.txt", @"C:\Users\DevWork\Desktop\example\long.txt");
+            this.alphaValueParser = new AlphaValueParser(@"C:\Users\DevWork\Desktop\example\p_1.txt");
         }
 
         public void execute()
@@ -32,13 +32,20 @@ namespace GaussianMapRender
             alphaValues = alphaValueParser.AlphaValueData;
             latitudeValues = coordinateParser.LatitudeCoordinates;
             longitudeValues = coordinateParser.LongitudeCoordinates;
+            Console.WriteLine("MAX >>> " + getMax(alphaValues));
+            Console.WriteLine("MIN >>> " + getMin(alphaValues));
+
+            for(int i = 0; i < alphaValues.Count; i++)
+            {
+                Console.WriteLine(alphaValues[i].ToString("0.0000000"));
+            }
         }
 		public double getMin(List<double> a)
 		{
 			double min = 10;
 			for (int i = 0; i < a.Count; i++)
 			{
-				min = (min >= a[i]) ? min : a[i];
+				min = (min >= a[i]) ? a[i] : min;
 			}
 			return min;
 		}
@@ -47,12 +54,9 @@ namespace GaussianMapRender
 			double max = 0;
 			for (int i = 0; i < a.Count; i++)
 			{
-				max = (max <= a[i]) ? max : a[i];
+				max = (max <= a[i]) ? a[i] : max;
 			}
 			return max;
-		}
-
-       
-
+		}       
     }
 }
