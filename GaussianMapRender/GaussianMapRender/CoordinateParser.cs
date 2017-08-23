@@ -12,8 +12,8 @@ namespace GaussianMapRender
         private String LatitudeFilePath;
         private String LongitudeFilePath;
 
-        public ArrayList LatitudeCoordinates { get; }
-        public ArrayList LongitudeCoordinates { get; }
+        public List<double> LatitudeCoordinates { get; }
+        public List<double> LongitudeCoordinates { get; }
 
         public CoordinateParser() { }
 
@@ -24,8 +24,8 @@ namespace GaussianMapRender
             this.LatitudeFilePath = latitudeFilePath;
             this.LongitudeFilePath = longitudeFilePath;
 
-            LatitudeCoordinates = new ArrayList();
-            LongitudeCoordinates = new ArrayList();
+            LatitudeCoordinates = new List<double>();
+            LongitudeCoordinates = new List<double>();
         }
 
         // Parse text file for latitude & longitude coordinates
@@ -69,12 +69,12 @@ namespace GaussianMapRender
 
         }
 
-        public ArrayList getLatitudeCoordinates()
+        public List<double> getLatitudeCoordinates()
         {
             return LatitudeCoordinates;
         }
 
-        public ArrayList getLongitudeCoordinates()
+        public List<double> getLongitudeCoordinates()
         {
             return LongitudeCoordinates;
         }

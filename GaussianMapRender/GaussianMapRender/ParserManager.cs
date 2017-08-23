@@ -13,9 +13,9 @@ namespace GaussianMapRender
         public CoordinateParser coordinateParser;
         public AlphaValueParser alphaValueParser;
 
-        public ArrayList alphaValues;
-        public ArrayList latitudeValues;
-        public ArrayList longitudeValues;
+        public List<double> alphaValues;
+        public List<double> latitudeValues;
+        public List<double> longitudeValues;
 
         string RootURL = @"C:\User\DevWork\Desktop\example\";
 
@@ -33,6 +33,24 @@ namespace GaussianMapRender
             latitudeValues = coordinateParser.LatitudeCoordinates;
             longitudeValues = coordinateParser.LongitudeCoordinates;
         }
+		public double getMin(List<double> a)
+		{
+			double min = 10;
+			for (int i = 0; i < a.Count; i++)
+			{
+				min = (min >= a[i]) ? min : a[i];
+			}
+			return min;
+		}
+		public double getMax(List<double> a)
+		{
+			double max = 0;
+			for (int i = 0; i < a.Count; i++)
+			{
+				max = (max <= a[i]) ? max : a[i];
+			}
+			return max;
+		}
 
        
 

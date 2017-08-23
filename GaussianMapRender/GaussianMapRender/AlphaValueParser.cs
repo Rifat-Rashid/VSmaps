@@ -11,7 +11,7 @@ namespace GaussianMapRender
     {
         private String FilePath;
         private System.IO.StreamReader FileReader;
-        public ArrayList AlphaValueData { get; }
+        public List<double> AlphaValueData { get; }
 
         public AlphaValueParser() { }
 
@@ -20,7 +20,7 @@ namespace GaussianMapRender
         {
             this.FilePath = filePath;
             this.FileReader = new System.IO.StreamReader(@FilePath);
-            AlphaValueData = new ArrayList();
+            AlphaValueData = new List<double>();
         }
 
         public void ParseFile()
@@ -34,7 +34,7 @@ namespace GaussianMapRender
                 for(int i = 0; i < SplicedValues.Length; i++)
                 {
                     decimal CurrentAlphaValue= decimal.Parse(SplicedValues[i], System.Globalization.NumberStyles.Float);
-                    AlphaValueData.Add(Convert.ToDecimal(CurrentAlphaValue));
+                    AlphaValueData.Add((double)Convert.ToDecimal(CurrentAlphaValue));
                 }
                 Counter++;
             }
