@@ -123,80 +123,10 @@ namespace GaussianMapRender
             ArrayList alphaValues = new ArrayList();
             string URL_ALPHA_VALUES = URL + "1.txt";
 
-            System.IO.StreamReader file = new System.IO.StreamReader(URL_ALPHA_VALUES);
-            string line;
-            int counter = 0;
-            int lineNumber = 0;
-            while((line = file.ReadLine()) != null) 
-            {
-
-                string[] splicedValues = line.Split(',');
-                Console.WriteLine("{" + lineNumber + "}:" + splicedValues.Length);
-                lineNumber++;
-                counter+= line.Split(',').Length;
-            }
-            
-            Console.WriteLine("LINE COUNT >> " + counter);
-
-            // test block of code
-
-            /*
-            string alphaValuesSTR = System.IO.File.ReadAllText(URL_ALPHA_VALUES);
-
-            string[] test = alphaValuesSTR.Split(',');
-            for (int i = 0; i < test.Length / 2; i++)
-            {
-                try
-                {
-                    decimal d = decimal.Parse(test[i], System.Globalization.NumberStyles.Float);
-                    Console.WriteLine(Convert.ToDecimal(d));
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine("ERRORED VALUE>> " + test[i]);
-                }              
-            }
-
-            //Console.WriteLine(test[0]);
-            //decimal d = decimal.Parse(test[0], System.Globalization.NumberStyles.Float);
-            //Console.WriteLine(Convert.ToDecimal(d));
-
-            /*
-            // number of alpha value files
-            for (int i = 0; i < 20; i++)
-            {
-                string tempAphaValues = System.IO.File.ReadAllText(URL + (i + 1) + ".txt");
-                string[] alphaValuesArray = tempAphaValues.Split(',');
-                Console.WriteLine(alphaValuesArray[0]);
-                
-                for (int j = 0; j < alphaValuesArray.Length; j++)
-                {
-                    try
-                    {
-                        //Console.WriteLine(alphaValuesArray[j]);
-                        //decimal tempD = Decimal.Parse(alphaValuesArray[j].Replace('.',','), System.Globalization.NumberStyles.Float); // might not work...
-                        //Console.WriteLine(alphaValuesArray[j] + "----> " + (double)tempD);
-                        alphaValues.Add(alphaValuesArray[j]); // scientific notation -> usable var
-                        //Thread.Sleep(1000);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        Console.WriteLine("VALUE: " + alphaValuesArray[j]);
-                    }
-
-                }
-            }
-
-            /*
-            // print out everything in alphaValues ArrayList
-            foreach (Object o in alphaValues)
-            {
-                double alphaValue = (Double)o;
-                Console.WriteLine(alphaValue);
-            }
-            */
-
+            // AVParser => alpha value parser class
+            AlphaValueParser AVParser = new AlphaValueParser(URL_ALPHA_VALUES);
+            AVParser.ParseFile();
+            AVParser.PrintAlphaValues();
         }
 
         // returns bitmap: circle img

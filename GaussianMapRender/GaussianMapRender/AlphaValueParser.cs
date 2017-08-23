@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,16 +11,43 @@ namespace GaussianMapRender
     {
         private String FilePath;
         private System.IO.StreamReader FileReader;
+        private ArrayList AlphaValueData; 
+
         public AlphaValueParser() { }
 
         public AlphaValueParser(String filePath)
         {
             this.FilePath = filePath;
+            this.FileReader = new System.IO.StreamReader(@FilePath);
+            AlphaValueData = new ArrayList();
         }
 
-        private void parseFile()
+        public void ParseFile()
         {
+            //int LineNumber = 0;
+            String Line;
+            int Counter = 0;
+            while((Line = FileReader.ReadLine()) != null)
+            {
+                string[] SplicedValues = Line.Split(',');
+                for(int i = 0; i < SplicedValues.Length; i++)
+                {
+                    decimal CurrentAlphaValue= decimal.Parse(SplicedValues[i], System.Globalization.NumberStyles.Float);
+                    AlphaValueData.Add(Convert.ToDecimal(CurrentAlphaValue));
+                }
+                Counter++;
+            }
+            Console.WriteLine("LINE COUNT >> " + Counter);
+        }
 
+        public void PrintAlphaValues()
+        {
+            foreach(Object o in AlphaValueData)
+            {
+                Console.WriteLine(o);
+            }
         }
     }
+
+
 }
