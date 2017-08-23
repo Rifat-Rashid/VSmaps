@@ -52,28 +52,6 @@ namespace GaussianMapRender
             {
                 MessageBox.Show(ex.Message);
             }
-            // test commit
-            /*
-            PointF topLeft = new PointF();
-            PointF topRight = new PointF();
-            PointF botLeft = new PointF();
-            PointF botRight = new PointF();
-
-            //lng = x, lat = y
-            topLeft.X = (float)gmap.ViewArea.LocationTopLeft.Lng;
-            topLeft.Y = (float)gmap.ViewArea.LocationTopLeft.Lat;
-            topRight.X = (float)(gmap.ViewArea.LocationTopLeft.Lng + gmap.ViewArea.WidthLng);
-            topRight.Y = topLeft.Y;
-            botRight.X = (float)gmap.ViewArea.LocationRightBottom.Lng;
-            botRight.Y = (float)gmap.ViewArea.LocationRightBottom.Lat;
-            botLeft.X = (float)(gmap.ViewArea.LocationRightBottom.Lng - gmap.ViewArea.WidthLng);
-            botLeft.Y = botRight.Y;
-
-            Console.WriteLine("TL: " + topLeft.ToString());
-            Console.WriteLine("TR: " + topRight.ToString());
-            Console.WriteLine("BR: " + botRight.ToString());
-            Console.WriteLine("BL: " + botLeft.ToString());
-            */
         }
 
         private void saveGMapToDisk(String filePath)
@@ -122,11 +100,6 @@ namespace GaussianMapRender
                     addGPSPoint(coordinatePoint);
                 }
             }
-            /*
-            ThreadStart childref = new ThreadStart(renderGPSCoordinates);
-            Thread childThread = new Thread(childref);
-            childThread.Start();
-            */
         }
 
         private void addGPSPoint(PointF point)
