@@ -57,6 +57,14 @@ namespace GaussianMapRender
 				max = (max <= a[i]) ? a[i] : max;
 			}
 			return max;
-		}       
+		}
+		public void scale(List<double> a, double min, double max)
+		{
+			double scale = 255.0 / max;
+			for (int i = 0; i < a.Count; i++)
+			{
+				a[i] *= scale;
+			}
+		}
     }
 }
