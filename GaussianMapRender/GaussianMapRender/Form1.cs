@@ -52,6 +52,7 @@ namespace GaussianMapRender
             {
                 MessageBox.Show(ex.Message);
             }
+            // test commit
             /*
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
