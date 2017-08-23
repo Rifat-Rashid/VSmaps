@@ -116,17 +116,23 @@ namespace GaussianMapRender
         // method meant for testing lat long data files
         public void TestDataFiles()
         {
-            string URL = @"C:\Users\DevWork\Desktop\example\p_";
+            string URL = @"C:\Users\DevWork\Desktop\";
             // reads everything in one line
             string latData = System.IO.File.ReadAllText(@"C:\Users\DevWork\Desktop\lat.txt");
             string lngData = System.IO.File.ReadAllText(@"C:\Users\DevWork\Desktop\long.txt");
             ArrayList alphaValues = new ArrayList();
             string URL_ALPHA_VALUES = URL + "1.txt";
 
+            CoordinateParser p = new CoordinateParser(URL + "lat.txt", URL + "long.txt");
+            p.ParseFile();
+            p.PrintCoordinates();
+
+            /*
             // AVParser => alpha value parser class
             AlphaValueParser AVParser = new AlphaValueParser(URL_ALPHA_VALUES);
             AVParser.ParseFile();
             AVParser.PrintAlphaValues();
+            */
         }
 
         // returns bitmap: circle img
