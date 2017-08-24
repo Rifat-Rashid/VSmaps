@@ -50,6 +50,7 @@ namespace GaussianMapRender
         }
 		public double getMin(List<double> a)
 		{
+			double min = 0;
 			for (int i = 0; i < a.Count; i++)
 			{
 				min = (min >= a[i]) ? a[i] : min;
