@@ -21,8 +21,8 @@ namespace GaussianMapRender
 
         public ParserManager()
         {
-            this.coordinateParser = new CoordinateParser(@"C: \Users\DevWork\Desktop\example\lat.txt", @"C:\Users\DevWork\Desktop\example\long.txt");
-            this.alphaValueParser = new AlphaValueParser(@"C:\Users\DevWork\Desktop\example\p_1.txt");
+            this.coordinateParser = new CoordinateParser(@"C:\Users\tejas\Desktop\lat.txt", @"C:\Users\tejas\Desktop\long.txt");
+            this.alphaValueParser = new AlphaValueParser(@"C:\Users\tejas\Desktop\p_1.txt");
         }
 
         public void execute()
@@ -32,17 +32,24 @@ namespace GaussianMapRender
             alphaValues = alphaValueParser.AlphaValueData;
             latitudeValues = coordinateParser.LatitudeCoordinates;
             longitudeValues = coordinateParser.LongitudeCoordinates;
+            double min = getMin(alphaValues);
+            double max = getMax(alphaValues);
             Console.WriteLine("MAX >>> " + getMax(alphaValues));
             Console.WriteLine("MIN >>> " + getMin(alphaValues));
+            for (int i = 0; i < alphaValues.Count; i++)
+            {
+                alphaValues[i] = scaleAlphaValue(alphaValues[i], 0, 255, min, max);
+                Console.WriteLine(alphaValues[i]);
+            }
+            Console.WriteLine(getMin(alphaValues) + " " + getMax(alphaValues));
 
-            for(int i = 0; i < alphaValues.Count; i++)
+            /*for(int i = 0; i < alphaValues.Count; i++)
             {
                 Console.WriteLine(alphaValues[i].ToString("0.0000000"));
-            }
+            }*/
         }
 		public double getMin(List<double> a)
 		{
-			double min = 10;
 			for (int i = 0; i < a.Count; i++)
 			{
 				min = (min >= a[i]) ? a[i] : min;
@@ -51,12 +58,17 @@ namespace GaussianMapRender
 		}
 		public double getMax(List<double> a)
 		{
-			double max = 0;
-			for (int i = 0; i < a.Count; i++)
-			{
-				max = (max <= a[i]) ? a[i] : max;
-			}
-			return max;
+            double max = 0;
+            double index = 0;
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (max < a[i])
+                {
+                    max = a[i];
+                    index = i;
+                }
+            }
+            return max;
 		}
 		public void scale(List<double> a, double min, double max)
 		{
@@ -66,5 +78,9 @@ namespace GaussianMapRender
 				a[i] *= scale;
 			}
 		}
+        public double scaleAlphaValue(double alphaValue, double minAllowed, double maxAllowed, double min, double max)
+        {
+            return (maxAllowed - minAllowed) * (alphaValue - min) / (max - min) + minAllowed;
+        }
     }
 }
