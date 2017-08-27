@@ -36,12 +36,12 @@ namespace GaussianMapRender
             double max = getMax(alphaValues);
             Console.WriteLine("MAX >>> " + getMax(alphaValues));
             Console.WriteLine("MIN >>> " + getMin(alphaValues));
-            for (int i = 0; i < alphaValues.Count; i++)
+            /*for (int i = 0; i < alphaValues.Count; i++)
             {
                 alphaValues[i] = scaleAlphaValue(alphaValues[i], 0, 255, min, max);
                 Console.WriteLine(alphaValues[i]);
             }
-            Console.WriteLine(getMin(alphaValues) + " " + getMax(alphaValues));
+            Console.WriteLine(getMin(alphaValues) + " " + getMax(alphaValues));*/
 
             /*for(int i = 0; i < alphaValues.Count; i++)
             {
