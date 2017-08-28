@@ -123,6 +123,7 @@ namespace GaussianMapRender
             Console.WriteLine("BL: " + botLeft.ToString());
 
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
+            //test
             // first param: start latitude
             // second param: start longitude
             // third param: end latitude
