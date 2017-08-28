@@ -113,6 +113,26 @@ namespace GaussianMapRender
                     addGPSPoint(p);
                 }
             }
+
+            /*
+            PointF topLeft = new PointF();
+            PointF topRight = new PointF();
+            PointF botLeft = new PointF();
+            PointF botRight = new PointF();
+            //lng = x, lat = y
+            topLeft.X = (float)gmap.ViewArea.LocationTopLeft.Lng;
+            topLeft.Y = (float)gmap.ViewArea.LocationTopLeft.Lat;
+            topRight.X = (float)(gmap.ViewArea.LocationTopLeft.Lng + gmap.ViewArea.WidthLng);
+            topRight.Y = topLeft.Y;
+            botRight.X = (float)gmap.ViewArea.LocationRightBottom.Lng;
+            botRight.Y = (float)gmap.ViewArea.LocationRightBottom.Lat;
+            botLeft.X = (float)(gmap.ViewArea.LocationRightBottom.Lng - gmap.ViewArea.WidthLng);
+            botLeft.Y = botRight.Y;
+            Console.WriteLine("TL: " + topLeft.ToString());
+            Console.WriteLine("TR: " + topRight.ToString());
+            Console.WriteLine("BR: " + botRight.ToString());
+            Console.WriteLine("BL: " + botLeft.ToString());
+            */
         }
 
         // returns bitmap: circle img
