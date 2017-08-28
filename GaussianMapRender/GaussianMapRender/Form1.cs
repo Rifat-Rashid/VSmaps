@@ -102,6 +102,17 @@ namespace GaussianMapRender
 
             ParserManager P = new ParserManager();
             P.execute();
+            List<double> lats = P.latitudeValues;
+            List<double> lngs = P.longitudeValues;
+
+            for(int i = 0; i < lats.Count; i++)
+            {
+                for(int j = 0; j < lngs.Count; j++)
+                {
+                    PointF p = new PointF((float)lats[i], (float)lngs[j]);
+                    addGPSPoint(p);
+                }
+            }
         }
 
         // returns bitmap: circle img
