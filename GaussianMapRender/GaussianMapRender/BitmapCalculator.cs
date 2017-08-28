@@ -23,7 +23,9 @@ namespace GaussianMapRender
         }
         public double calculateBitmapWidth(double distance, double maxDistance, double imageWidth)
         {
+            Console.WriteLine(distance + " " + maxDistance);
             double ratio = distance / maxDistance;
+            Console.WriteLine("RATIO: " + ratio);
             double width = imageWidth * ratio / 2;
             Console.WriteLine("WIDTH OF BITMAP: " + width);
             return width;

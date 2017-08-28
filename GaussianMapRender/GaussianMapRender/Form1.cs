@@ -123,9 +123,9 @@ namespace GaussianMapRender
 
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
             double widthDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[0], (float)lngs[1]);
-            double maxWidthDistance = bitmapCalculator.calculateDistance(topLeft.Y, topLeft.X, topRight.Y, topRight.X);
+            double maxWidthDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[0], lngs[lngs.Count - 1]);
             double heightDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[1], (float)lngs[0]);
-            double maxHeightDistance = bitmapCalculator.calculateDistance(topLeft.Y, topLeft.X, botLeft.Y, botLeft.X);
+            double maxHeightDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[lats.Count - 1], lngs[0]);
             int width = (int)bitmapCalculator.calculateBitmapWidth(widthDistance, maxWidthDistance, img.Width);
             int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);
             Console.WriteLine(width + " " + height);
@@ -133,13 +133,14 @@ namespace GaussianMapRender
             {
                 for (int j = 0; j < lngs.Count; j++)
                 {
-                    Bitmap b = new Bitmap(width, height);
+                    /*Bitmap b = new Bitmap(width, height);
                     Graphics g = Graphics.FromImage(b);
                     Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
                     Brush brush = new SolidBrush(c);
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
+                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);*/
                     GMapOverlay markers = new GMapOverlay("markers");
-                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]), b);
+                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
+                        new Bitmap(circle(width*5, height*5)));
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
                 }
@@ -177,6 +178,15 @@ namespace GaussianMapRender
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             Color c = Color.FromArgb(50, 0, 0, 0);
+            Brush b = new SolidBrush(c);
+            g.FillEllipse(b, 0, 0, width, height);
+            return bmp;
+        }
+        private Bitmap circle_2(double alphaValue, int width, int height)
+        {
+            Bitmap bmp = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(bmp);
+            Color c = Color.FromArgb((int)alphaValue, 0, 0, 0);
             Brush b = new SolidBrush(c);
             g.FillEllipse(b, 0, 0, width, height);
             return bmp;
