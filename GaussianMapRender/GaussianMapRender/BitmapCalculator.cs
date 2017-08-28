@@ -21,5 +21,18 @@ namespace GaussianMapRender
 
             return coord_1.GetDistanceTo(coord_2);
         }
+        public double calculateBitmapWidth(double distance, double maxDistance, double imageWidth)
+        {
+            double ratio = distance / maxDistance;
+            double width = imageWidth * ratio / 2;
+            Console.WriteLine("WIDTH OF BITMAP: " + width);
+            return width;
+        }
+        public double calculateBitmapHeight(double distance, double maxDistance, double imageHeight)
+        {
+            double ratio = distance / maxDistance;
+            double height = imageHeight * ratio / 2;
+            return height;
+        }
     }
 }
