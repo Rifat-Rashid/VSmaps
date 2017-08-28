@@ -146,9 +146,10 @@ namespace GaussianMapRender
                     Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
                     Brush brush = new SolidBrush(c);
                     g.FillRectangle(brush, 0, 0, b.Width, b.Height);*/
+                    //Console.WriteLine(alphaValues[i + j]);
                     GMapOverlay markers = new GMapOverlay("markers");
                     GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(circle(width*5, height*5)));
+                        new Bitmap(circle_2((int) alphaValues[i + j], width*5, height*5)));
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
                 }
@@ -166,6 +167,9 @@ namespace GaussianMapRender
             List<double> lats = P.latitudeValues;
             List<double> lngs = P.longitudeValues;
             List<double> alphaValues = P.alphaValues;
+            double min = P.getMin(alphaValues);
+            double max = P.getMax(alphaValues);
+            P.scale(alphaValues, min, max);
 
             /*for(int i = 0; i < lats.Count; i++)
             {
@@ -194,7 +198,7 @@ namespace GaussianMapRender
         {
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
-            Color c = Color.FromArgb((int)alphaValue, 0, 0, 0);
+            Color c = Color.FromArgb((int)alphaValue, 255, 0, 0);
             Brush b = new SolidBrush(c);
             g.FillEllipse(b, 0, 0, width, height);
             return bmp;
