@@ -34,7 +34,7 @@ namespace GaussianMapRender
             gmap.SetPositionByKeywords(DEFAULT_LOCATION);
             gmap.ShowCenter = false;
             gmap.Zoom = 5;
-            TestDataFiles();
+            //TestDataFiles();
         }
 
         private void gmap_Load(object sender, EventArgs e)
@@ -44,6 +44,8 @@ namespace GaussianMapRender
 
         private void SaveMap_Click(object sender, EventArgs e)
         {
+            TestDataFiles();
+            /*
             Image g = gmap.ToImage();
             try
             {
@@ -53,6 +55,7 @@ namespace GaussianMapRender
             {
                 MessageBox.Show(ex.Message);
             }
+            */
         }
 
         public Image getGmapImage()
@@ -149,7 +152,7 @@ namespace GaussianMapRender
                     //Console.WriteLine(alphaValues[i + j]);
                     GMapOverlay markers = new GMapOverlay("markers");
                     GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(circle_2((int) alphaValues[i + j], width*5, height*5)));
+                        new Bitmap(circle_2((int) alphaValues[i + j], width, height)));
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
                 }
@@ -196,11 +199,11 @@ namespace GaussianMapRender
         }
         private Bitmap circle_2(double alphaValue, int width, int height)
         {
-            Bitmap bmp = new Bitmap(width, height);
+            Bitmap bmp = new Bitmap(width*10, height*10);
             Graphics g = Graphics.FromImage(bmp);
-            Color c = Color.FromArgb((int)alphaValue, 255, 0, 0);
+            Color c = Color.FromArgb(((int)(255-alphaValue)), 255, 0, 0);
             Brush b = new SolidBrush(c);
-            g.FillEllipse(b, 0, 0, width, height);
+            g.FillRectangle(b, 0, 0, width*10, height*10);
             return bmp;
         }
 
