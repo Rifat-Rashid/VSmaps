@@ -122,6 +122,11 @@ namespace GaussianMapRender
             Console.WriteLine("BL: " + botLeft.ToString());
 
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
+            // first param: start latitude
+            // second param: start longitude
+            // third param: end latitude
+            // fourth param: end longitude
+            // calculateDistance method calculates distance in meters between two lat lngs
             double widthDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[0], (float)lngs[1]);
             double maxWidthDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[0], lngs[lngs.Count - 1]);
             double heightDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[1], (float)lngs[0]);
@@ -133,6 +138,7 @@ namespace GaussianMapRender
             {
                 for (int j = 0; j < lngs.Count; j++)
                 {
+                    // JANK BITMAP CREATION CODE
                     /*Bitmap b = new Bitmap(width, height);
                     Graphics g = Graphics.FromImage(b);
                     Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
