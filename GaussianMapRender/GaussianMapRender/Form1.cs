@@ -13,6 +13,7 @@ using GMap.NET.WindowsForms;
 using GMap.NET;
 using System.Threading;
 using System.Collections;
+using System.Device.Location;
 
 namespace GaussianMapRender
 {
