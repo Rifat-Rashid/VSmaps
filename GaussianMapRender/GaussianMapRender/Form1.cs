@@ -47,12 +47,20 @@ namespace GaussianMapRender
             Image g = gmap.ToImage();
             try
             {
-                g.Save(@"C:\Users\DevWork\Desktop\source.png");
+                g.Save(@"C:\Users\tejas\Desktop\source.png");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        public Image getGmapImage()
+        {
+            Image img = gmap.ToImage();
+            Console.WriteLine(img.Width);
+            Console.WriteLine(img.Height);
+            return img;
         }
 
         private void saveGMapToDisk(String filePath)
@@ -94,28 +102,8 @@ namespace GaussianMapRender
             markers.Markers.Add(marker);
             gmap.Overlays.Add(markers);
         }
-
-        // method meant for testing lat long data files
-        public void TestDataFiles()
+        private void renderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
-            string URL = @"C:\Users\DevWork\Desktop\";
-            string URL_ALPHA_VALUES = URL + "1.txt";
-
-            ParserManager P = new ParserManager();
-            P.execute();
-            List<double> lats = P.latitudeValues;
-            List<double> lngs = P.longitudeValues;
-
-            for(int i = 0; i < lats.Count; i++)
-            {
-                for(int j = 0; j < lngs.Count; j++)
-                {
-                    PointF p = new PointF((float)lats[i], (float)lngs[j]);
-                    addGPSPoint(p);
-                }
-            }
-
-            /*
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
             PointF botLeft = new PointF();
@@ -133,7 +121,62 @@ namespace GaussianMapRender
             Console.WriteLine("TR: " + topRight.ToString());
             Console.WriteLine("BR: " + botRight.ToString());
             Console.WriteLine("BL: " + botLeft.ToString());
-            */
+
+            BitmapCalculator bitmapCalculator = new BitmapCalculator();
+            // first param: start latitude
+            // second param: start longitude
+            // third param: end latitude
+            // fourth param: end longitude
+            // calculateDistance method calculates distance in meters between two lat lngs
+            double widthDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[0], (float)lngs[1]);
+            double maxWidthDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[0], lngs[lngs.Count - 1]);
+            double heightDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[1], (float)lngs[0]);
+            double maxHeightDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[lats.Count - 1], lngs[0]);
+            int width = (int)bitmapCalculator.calculateBitmapWidth(widthDistance, maxWidthDistance, img.Width);
+            int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);
+            Console.WriteLine(width + " " + height);
+            for (int i = 0; i < lats.Count; i++)
+            {
+                for (int j = 0; j < lngs.Count; j++)
+                {
+                    // JANK BITMAP CREATION CODE
+                    /*Bitmap b = new Bitmap(width, height);
+                    Graphics g = Graphics.FromImage(b);
+                    Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
+                    Brush brush = new SolidBrush(c);
+                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);*/
+                    GMapOverlay markers = new GMapOverlay("markers");
+                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
+                        new Bitmap(circle(width*5, height*5)));
+                    markers.Markers.Add(marker);
+                    gmap.Overlays.Add(markers);
+                }
+            }
+        }
+
+        // method meant for testing lat long data files
+        public void TestDataFiles()
+        {
+            string URL = @"C:\Users\DevWork\Desktop\";
+            string URL_ALPHA_VALUES = URL + "1.txt";
+
+            ParserManager P = new ParserManager();
+            P.execute();
+            List<double> lats = P.latitudeValues;
+            List<double> lngs = P.longitudeValues;
+            List<double> alphaValues = P.alphaValues;
+
+            /*for(int i = 0; i < lats.Count; i++)
+            {
+                for(int j = 0; j < lngs.Count; j++)
+                {
+                    PointF p = new PointF((float)lats[i], (float)lngs[j]);
+                    addGPSPoint(p);
+                }
+            }*/
+            Image img = getGmapImage();
+            renderBitmaps(lats, lngs, alphaValues, img);
+
         }
 
         // returns bitmap: circle img
@@ -142,6 +185,15 @@ namespace GaussianMapRender
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             Color c = Color.FromArgb(50, 0, 0, 0);
+            Brush b = new SolidBrush(c);
+            g.FillEllipse(b, 0, 0, width, height);
+            return bmp;
+        }
+        private Bitmap circle_2(double alphaValue, int width, int height)
+        {
+            Bitmap bmp = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(bmp);
+            Color c = Color.FromArgb((int)alphaValue, 0, 0, 0);
             Brush b = new SolidBrush(c);
             g.FillEllipse(b, 0, 0, width, height);
             return bmp;

@@ -21,8 +21,8 @@ namespace GaussianMapRender
 
         public ParserManager()
         {
-            this.coordinateParser = new CoordinateParser(@"C:\Users\DevWork\Desktop\lat.txt", @"C:\Users\DevWork\Desktop\long.txt");
-            this.alphaValueParser = new AlphaValueParser(@"C:\Users\DevWork\Desktop\p_1.txt");
+            this.coordinateParser = new CoordinateParser(@"C:\Users\tejas\Documents\GitHub\VSmaps\Data\lat.txt", @"C:\Users\tejas\Documents\GitHub\VSmaps\Data\long.txt");
+            this.alphaValueParser = new AlphaValueParser(@"C:\Users\tejas\Documents\GitHub\VSmaps\Data\p_1.txt");
         }
 
         public void execute()
@@ -34,8 +34,13 @@ namespace GaussianMapRender
             longitudeValues = coordinateParser.LongitudeCoordinates;
             double min = getMin(alphaValues);
             double max = getMax(alphaValues);
-            Console.WriteLine("MAX >>> " + getMax(alphaValues));
-            Console.WriteLine("MIN >>> " + getMin(alphaValues));
+            /*for (int i = 0; i < longitudeValues.Count; i++)
+            {
+                Console.WriteLine(longitudeValues[i]);
+            }*/
+            //Console.WriteLine(getMax(longitudeValues));
+            //Console.WriteLine("MAX >>> " + getMax(alphaValues));
+            //Console.WriteLine("MIN >>> " + getMin(alphaValues));
             /*for (int i = 0; i < alphaValues.Count; i++)
             {
                 alphaValues[i] = scaleAlphaValue(alphaValues[i], 0, 255, min, max);
