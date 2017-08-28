@@ -114,7 +114,7 @@ namespace GaussianMapRender
                 }
             }
 
-            /*
+            
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
             PointF botLeft = new PointF();
@@ -132,7 +132,12 @@ namespace GaussianMapRender
             Console.WriteLine("TR: " + topRight.ToString());
             Console.WriteLine("BR: " + botRight.ToString());
             Console.WriteLine("BL: " + botLeft.ToString());
-            */
+
+            BitmapCalculator bitmapCalculator = new BitmapCalculator();
+            double distance = bitmapCalculator.calculateDistance(topLeft.Y, topLeft.X, topRight.Y, topRight.X);
+            Console.WriteLine(distance);
+
+            
         }
 
         // returns bitmap: circle img
