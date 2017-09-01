@@ -76,17 +76,24 @@ namespace GaussianMapRender
             }
             return max;
 		}
-		public void scale(List<double> a, double min, double max)
+		public void scale(List<double> alphaValues)
 		{
-			double scale = 255.0 / max;
-			for (int i = 0; i < a.Count; i++)
+            double scale = scaleAlphaValue(alphaValues);
+			for (int i = 0; i < alphaValues.Count; i++)
 			{
-				a[i] *= scale;
+                alphaValues[i] = scale * alphaValues[i];
 			}
 		}
-        public double scaleAlphaValue(double alphaValue, double minAllowed, double maxAllowed, double min, double max)
+        public double scaleAlphaValue(List<double> alphaValues)
         {
-            return (maxAllowed - minAllowed) * (alphaValue - min) / (max - min) + minAllowed;
+            double alphaMax = 255;
+            double alphaMin = 0;
+            double probabilityMax = getMax(alphaValues);
+            double probabilityMin = getMin(alphaValues);
+
+            double m = (alphaMax - alphaMin) / (probabilityMax - probabilityMin);
+
+            return m;
         }
     }
 }

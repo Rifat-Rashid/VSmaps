@@ -125,6 +125,7 @@ namespace GaussianMapRender
             Console.WriteLine("BR: " + botRight.ToString());
             Console.WriteLine("BL: " + botLeft.ToString());
 
+
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
             //test
             // first param: start latitude
@@ -138,6 +139,40 @@ namespace GaussianMapRender
             double maxHeightDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[lats.Count - 1], lngs[0]);
             int width = (int)bitmapCalculator.calculateBitmapWidth(widthDistance, maxWidthDistance, img.Width);
             int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);
+
+            // test logic v0.0.1
+            PointF firstCoordinate = new PointF((float)lats[0], (float)lngs[0]);
+            PointF secondCoordinate = new PointF((float)lats[0], (float)lngs[1]);
+
+            // calculate distance
+            GeoCoordinate coord_1 = new GeoCoordinate(firstCoordinate.X, firstCoordinate.Y);
+            GeoCoordinate coord_2 = new GeoCoordinate(secondCoordinate.X, secondCoordinate.Y);
+
+            GeoCoordinate coord_3 = new GeoCoordinate(topLeft.Y, topLeft.X);
+            GeoCoordinate coord_4 = new GeoCoordinate(topRight.Y, topRight.X);
+            // returns distance in meters accroding to docs
+            // @docs: https://msdn.microsoft.com/en-us/library/system.device.location.geocoordinate.getdistanceto(v=vs.110).aspx
+            double distance = coord_1.GetDistanceTo(coord_2);
+            double screenDistance = coord_3.GetDistanceTo(coord_4);
+
+            // print check
+            Console.WriteLine("Distance: " + distance);
+
+            // GET screen dimensions
+            Image bitmap = gmap.ToImage();
+            double bitmapWidth = bitmap.Width;
+            double bitmapHeight = bitmap.Height;
+
+            // calculate ratios (meters per pixel?)
+            double ratio = bitmapWidth/screenDistance;
+            Console.WriteLine(screenDistance);
+
+            // print results
+            Console.WriteLine("Pixels per Meter Ratio: " + ratio);
+            Console.WriteLine("Distance of First Two Points: " + ratio * distance);
+
+            /*
+
             Console.WriteLine(width + " " + height);
             for (int i = 0; i < lats.Count; i++)
             {
@@ -147,8 +182,8 @@ namespace GaussianMapRender
                     /*Bitmap b = new Bitmap(width, height);
                     Graphics g = Graphics.FromImage(b);
                     Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
-                    Brush brush = new SolidBrush(c);
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);*/
+                    Brush brush = new SolidBrush(c);///@replace
+                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
                     //Console.WriteLine(alphaValues[i + j]);
                     GMapOverlay markers = new GMapOverlay("markers");
                     GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
@@ -157,6 +192,7 @@ namespace GaussianMapRender
                     gmap.Overlays.Add(markers);
                 }
             }
+            */
         }
 
         // method meant for testing lat long data files
@@ -172,7 +208,7 @@ namespace GaussianMapRender
             List<double> alphaValues = P.alphaValues;
             double min = P.getMin(alphaValues);
             double max = P.getMax(alphaValues);
-            P.scale(alphaValues, min, max);
+            P.scale(alphaValues);
 
             /*for(int i = 0; i < lats.Count; i++)
             {
@@ -199,11 +235,11 @@ namespace GaussianMapRender
         }
         private Bitmap circle_2(double alphaValue, int width, int height)
         {
-            Bitmap bmp = new Bitmap(width*10, height*10);
+            Bitmap bmp = new Bitmap(width*15, height*15);
             Graphics g = Graphics.FromImage(bmp);
-            Color c = Color.FromArgb(((int)(255-alphaValue)), 255, 0, 0);
+            Color c = Color.FromArgb(255-((int)(alphaValue)), 255, 0, 0);
             Brush b = new SolidBrush(c);
-            g.FillRectangle(b, 0, 0, width*10, height*10);
+            g.FillRectangle(b, 0, 0, width*15, height*15);
             return bmp;
         }
 
