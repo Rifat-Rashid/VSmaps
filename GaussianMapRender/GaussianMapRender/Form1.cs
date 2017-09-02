@@ -139,7 +139,7 @@ namespace GaussianMapRender
             double maxHeightDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[lats.Count - 1], lngs[0]);
             int width = (int)bitmapCalculator.calculateBitmapWidth(widthDistance, maxWidthDistance, img.Width);
             int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);
-
+            //---------------------------------------------------------------------------------------------------------
             // test logic v0.0.1
             PointF firstCoordinate = new PointF((float)lats[0], (float)lngs[0]);
             PointF secondCoordinate = new PointF((float)lats[0], (float)lngs[1]);
@@ -155,21 +155,36 @@ namespace GaussianMapRender
             double distance = coord_1.GetDistanceTo(coord_2);
             double screenDistance = coord_3.GetDistanceTo(coord_4);
 
+            Console.WriteLine("Distance between coord1 and 2: "+ distance);
+            Console.WriteLine("screen distance: " + screenDistance);
+
             // print check
-            Console.WriteLine("Distance: " + distance);
+            //Console.WriteLine("Distance: " + distance);
 
             // GET screen dimensions
             Image bitmap = gmap.ToImage();
             double bitmapWidth = bitmap.Width;
             double bitmapHeight = bitmap.Height;
 
+            Console.WriteLine("BITMAP WIDTH: " + bitmapWidth);
+
             // calculate ratios (meters per pixel?)
-            double ratio = bitmapWidth/screenDistance;
+            double ratio = screenDistance/bitmapWidth; // meters/pixels
             Console.WriteLine(screenDistance);
 
             // print results
-            Console.WriteLine("Pixels per Meter Ratio: " + ratio);
-            Console.WriteLine("Distance of First Two Points: " + ratio * distance);
+            Console.WriteLine("Matrix Shift: " + distance / ratio);
+                    Bitmap b = new Bitmap((int)Math.Ceiling(distance/ratio), (int)Math.Ceiling(distance/ratio));
+                    Graphics g = Graphics.FromImage(b);
+                    Color c = Color.FromArgb(255, 255, 0, 0);
+                    Brush brush = new SolidBrush(c);///@replace
+                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
+                    //Console.WriteLine(alphaValues[i + j]);
+                    GMapOverlay markers = new GMapOverlay("markers");
+                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(firstCoordinate.X, firstCoordinate.Y),
+                        b);
+                    markers.Markers.Add(marker);
+                    gmap.Overlays.Add(markers);
 
             /*
 
@@ -235,7 +250,7 @@ namespace GaussianMapRender
         }
         private Bitmap circle_2(double alphaValue, int width, int height)
         {
-            Bitmap bmp = new Bitmap(width*15, height*15);
+            Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
             Color c = Color.FromArgb(255-((int)(alphaValue)), 255, 0, 0);
             Brush b = new SolidBrush(c);
