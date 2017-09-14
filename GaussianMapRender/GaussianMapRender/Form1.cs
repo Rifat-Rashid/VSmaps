@@ -150,6 +150,8 @@ namespace GaussianMapRender
 
             GeoCoordinate coord_3 = new GeoCoordinate(topLeft.Y, topLeft.X);
             GeoCoordinate coord_4 = new GeoCoordinate(topRight.Y, topRight.X);
+
+
             // returns distance in meters accroding to docs
             // @docs: https://msdn.microsoft.com/en-us/library/system.device.location.geocoordinate.getdistanceto(v=vs.110).aspx
             double distance = coord_1.GetDistanceTo(coord_2);
@@ -158,8 +160,7 @@ namespace GaussianMapRender
             Console.WriteLine("Distance between coord1 and 2: "+ distance);
             Console.WriteLine("screen distance: " + screenDistance);
 
-            // print check
-            //Console.WriteLine("Distance: " + distance);
+            // print check  //Console.WriteLine("Distance: " + distance);
 
             // GET screen dimensions
             Image bitmap = gmap.ToImage();
@@ -170,9 +171,10 @@ namespace GaussianMapRender
 
             // calculate ratios (meters per pixel?)
             double ratio = screenDistance/bitmapWidth; // meters/pixels
-            Console.WriteLine(screenDistance);
+            Console.WriteLine(screenDistance);    // print results
 
-            // print results
+            //TODO: Lets fix later?
+            /*
             Console.WriteLine("Matrix Shift: " + distance / ratio);
                     Bitmap b = new Bitmap((int)Math.Ceiling(distance/ratio), (int)Math.Ceiling(distance/ratio));
                     Graphics g = Graphics.FromImage(b);
@@ -186,7 +188,7 @@ namespace GaussianMapRender
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
 
-            /*
+            */
 
             Console.WriteLine(width + " " + height);
             for (int i = 0; i < lats.Count; i++)
@@ -194,20 +196,20 @@ namespace GaussianMapRender
                 for (int j = 0; j < lngs.Count; j++)
                 {
                     // JANK BITMAP CREATION CODE
-                    /*Bitmap b = new Bitmap(width, height);
+                    Bitmap b = new Bitmap((int)Math.Ceiling(distance / ratio), (int)Math.Ceiling(distance / ratio));
                     Graphics g = Graphics.FromImage(b);
-                    Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
+                    Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 20);
                     Brush brush = new SolidBrush(c);///@replace
                     g.FillRectangle(brush, 0, 0, b.Width, b.Height);
                     //Console.WriteLine(alphaValues[i + j]);
                     GMapOverlay markers = new GMapOverlay("markers");
                     GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(circle_2((int) alphaValues[i + j], width, height)));
+                        b);
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
                 }
             }
-            */
+            
         }
 
         // method meant for testing lat long data files
