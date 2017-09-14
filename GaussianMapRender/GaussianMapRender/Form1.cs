@@ -107,6 +107,7 @@ namespace GaussianMapRender
         }
         private void renderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
+            List<Bitmap> miniBitmaps = new List<Bitmap>();
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
             PointF botLeft = new PointF();
@@ -186,7 +187,7 @@ namespace GaussianMapRender
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
 
-            /*
+            
 
             Console.WriteLine(width + " " + height);
             for (int i = 0; i < lats.Count; i++)
@@ -202,12 +203,14 @@ namespace GaussianMapRender
                     //Console.WriteLine(alphaValues[i + j]);
                     GMapOverlay markers = new GMapOverlay("markers");
                     GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(circle_2((int) alphaValues[i + j], width, height)));
+                        new Bitmap(rectangle((int) alphaValues[i + j], width, height)));
                     markers.Markers.Add(marker);
-                    gmap.Overlays.Add(markers);
+                    gmap.Overlays.Add(markers);*/
+
+                    miniBitmaps.Add(rectangle((int)alphaValues[i + j], width, height));
                 }
             }
-            */
+            
         }
 
         // method meant for testing lat long data files
@@ -248,13 +251,13 @@ namespace GaussianMapRender
             g.FillEllipse(b, 0, 0, width, height);
             return bmp;
         }
-        private Bitmap circle_2(double alphaValue, int width, int height)
+        private Bitmap rectangle(double alphaValue, int width, int height)
         {
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
-            Color c = Color.FromArgb(255-((int)(alphaValue)), 255, 0, 0);
+            Color c = Color.FromArgb(((int)(alphaValue)), 255, 0, 0);
             Brush b = new SolidBrush(c);
-            g.FillRectangle(b, 0, 0, width*15, height*15);
+            g.FillRectangle(b, 0, 0, width, height);
             return bmp;
         }
 
