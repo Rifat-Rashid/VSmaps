@@ -14,6 +14,7 @@ using GMap.NET;
 using System.Threading;
 using System.Collections;
 using System.Device.Location;
+using System.Diagnostics;
 
 namespace GaussianMapRender
 {
@@ -45,17 +46,6 @@ namespace GaussianMapRender
         private void SaveMap_Click(object sender, EventArgs e)
         {
             TestDataFiles();
-            /*
-            Image g = gmap.ToImage();
-            try
-            {
-                g.Save(@"C:\Users\tejas\Desktop\source.png");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            */
         }
 
         public Image getGmapImage()
@@ -92,7 +82,7 @@ namespace GaussianMapRender
 
         private void openDialog_button_Click(object sender, EventArgs e)
         {
-           
+
         }
 
         private void addGPSPoint(PointF point)
@@ -105,7 +95,7 @@ namespace GaussianMapRender
             markers.Markers.Add(marker);
             gmap.Overlays.Add(markers);
         }
-        private void renderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
+        private void RenderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
             List<Bitmap> miniBitmaps = new List<Bitmap>();
             PointF topLeft = new PointF();
@@ -157,7 +147,7 @@ namespace GaussianMapRender
             double distance = coord_1.GetDistanceTo(coord_2);
             double screenDistance = coord_3.GetDistanceTo(coord_4);
 
-            Console.WriteLine("Distance between coord1 and 2: "+ distance);
+            Console.WriteLine("Distance between coord1 and 2: " + distance);
             Console.WriteLine("screen distance: " + screenDistance);
 
             // print check
@@ -171,7 +161,7 @@ namespace GaussianMapRender
             Console.WriteLine("BITMAP WIDTH: " + bitmapWidth);
 
             // calculate ratios (meters per pixel?)
-            double ratio = screenDistance/bitmapWidth; // meters/pixels
+            double ratio = screenDistance / bitmapWidth; // meters/pixels
             Console.WriteLine(screenDistance);
 
             // print results
@@ -191,7 +181,7 @@ namespace GaussianMapRender
                     */
 
             // code above is jank. Dont uncomment unless told to do so - Rifat
-            
+
 
             Console.WriteLine(width + " " + height);
             for (int i = 0; i < lats.Count; i++)
@@ -215,11 +205,36 @@ namespace GaussianMapRender
                     miniBitmaps.Add(rectangle((int)alphaValues[i + j], width, height));
                 }
             }
+
+            StitchedBitmap(miniBitmaps);
         }
 
         public void StitchedBitmap(List<Bitmap> bitmapCollection)
         {
-            int 
+            // width and height can be calculated ahead of time @bitmapCollection creation
+            int totalWidth = 0;
+            int totalHeight = 0;
+
+            // loop through collection to find width and height of newly created bitmap
+            for (int i = 0; i < bitmapCollection.Count; i++)
+            {
+                try
+                {
+                    totalWidth += bitmapCollection[i].Width;
+                    totalHeight += bitmapCollection[i].Height;
+                }catch(NullReferenceException nullRefrenceException)
+                {
+                    Console.WriteLine("Null refrence in bitmap stitching method");
+                    Console.WriteLine(nullRefrenceException.ToString());
+                }
+                catch(Exception e)  // for generic exceptions
+                {
+                    Console.WriteLine("Generic exception");
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
+            Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
         }
 
         // method meant for testing lat long data files
@@ -246,7 +261,7 @@ namespace GaussianMapRender
                 }
             }*/
             Image img = getGmapImage();
-            renderBitmaps(lats, lngs, alphaValues, img);
+            RenderBitmaps(lats, lngs, alphaValues, img);
 
         }
 
