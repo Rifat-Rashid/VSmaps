@@ -151,6 +151,7 @@ namespace GaussianMapRender
 
             GeoCoordinate coord_3 = new GeoCoordinate(topLeft.Y, topLeft.X);
             GeoCoordinate coord_4 = new GeoCoordinate(topRight.Y, topRight.X);
+
             // returns distance in meters accroding to docs
             // @docs: https://msdn.microsoft.com/en-us/library/system.device.location.geocoordinate.getdistanceto(v=vs.110).aspx
             double distance = coord_1.GetDistanceTo(coord_2);
@@ -174,6 +175,7 @@ namespace GaussianMapRender
             Console.WriteLine(screenDistance);
 
             // print results
+            /*
             Console.WriteLine("Matrix Shift: " + distance / ratio);
                     Bitmap b = new Bitmap((int)Math.Ceiling(distance/ratio), (int)Math.Ceiling(distance/ratio));
                     Graphics g = Graphics.FromImage(b);
@@ -186,7 +188,9 @@ namespace GaussianMapRender
                         b);
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);
+                    */
 
+            // code above is jank. Dont uncomment unless told to do so - Rifat
             
 
             Console.WriteLine(width + " " + height);
@@ -207,10 +211,15 @@ namespace GaussianMapRender
                     markers.Markers.Add(marker);
                     gmap.Overlays.Add(markers);*/
 
+                    // add bitmap to collection for stitching process
                     miniBitmaps.Add(rectangle((int)alphaValues[i + j], width, height));
                 }
             }
-            
+        }
+
+        public void StitchedBitmap(List<Bitmap> bitmapCollection)
+        {
+            int 
         }
 
         // method meant for testing lat long data files
