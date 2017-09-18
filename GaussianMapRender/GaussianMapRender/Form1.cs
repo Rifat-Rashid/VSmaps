@@ -220,6 +220,8 @@ namespace GaussianMapRender
             {
                 try
                 {
+                    Debug.WriteLine("W: " + bitmapCollection[i].Width + " H: " + bitmapCollection[i].Height);
+                    Thread.Sleep(500);
                     totalWidth += bitmapCollection[i].Width;
                     totalHeight += bitmapCollection[i].Height;
                 }catch(NullReferenceException nullRefrenceException)
