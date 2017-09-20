@@ -174,7 +174,10 @@ namespace GaussianMapRender
             StitchedBitmap(preStitchedCollection);
         }
 
-        
+        /// <summary>
+        /// Given a 2D array of segmented bitmaps, this method will stitch all of them together into one super bitmap.
+        /// </summary>
+        /// <param name="bitmapCollection">2D Array of segmented bitmaps</param>
         public void StitchedBitmap(Bitmap[,] bitmapCollection)
         {
             // width and height can be calculated ahead of time @bitmapCollection creation
