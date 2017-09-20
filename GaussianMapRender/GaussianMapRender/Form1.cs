@@ -191,16 +191,16 @@ namespace GaussianMapRender
             // loop through collection to find width and height of newly created bitmap
             for (int i = 0; i <= bitmapCollectionI; i++)
             {
-                for(int j = 0; j <= bitmapCollectionJ; j++)
+                for (int j = 0; j <= bitmapCollectionJ; j++)
                 {
                     try
                     {
                         // counting width (i)
-                        if(i == 0)
-                            totalWidth += bitmapCollection[i,j].Width;
+                        if (i == 0)
+                            totalWidth += bitmapCollection[i, j].Width;
                         // counting height (j)
-                        if(j == 0)
-                            totalHeight += bitmapCollection[i,j].Height;
+                        if (j == 0)
+                            totalHeight += bitmapCollection[i, j].Height;
                     }
                     catch (NullReferenceException nullRefrenceException)
                     {
@@ -212,10 +212,47 @@ namespace GaussianMapRender
                         Console.WriteLine("Generic exception");
                         Console.WriteLine(e.ToString());
                     }
-                }               
+                }
             }
             Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
-            Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
+            Bitmap superBitmap = new Bitmap(totalWidth, totalHeight);
+            int currentY = 0;   // keeps track of y coordinate
+            int iterates = 0;
+
+            // loop for copying micro bitmaps onto super bitmap
+            // @SOURCE: https://stackoverflow.com/questions/9616617/c-sharp-copy-paste-an-image-region-into-another-image
+            using (Graphics g = Graphics.FromImage(superBitmap))
+            {
+                g.FillRectangle(new SolidBrush(Color.White), 0, 0, totalWidth, totalHeight);
+                // copy bitmap collection onto super bitmap
+                for (int i = 0; i <= bitmapCollectionI; i++)
+                {
+                    int currentX = 0;   // keeps track of x coordinate
+                    for (int j = 0; j <= bitmapCollectionJ; j++)
+                    {
+                        Bitmap sampledBitmap = bitmapCollection[i, j];
+                        g.DrawImage(sampledBitmap, currentX, currentY);
+                        currentX += sampledBitmap.Width;
+                        if (j == bitmapCollectionJ)
+                        {
+                            currentY += sampledBitmap.Height;
+                            Console.WriteLine(currentY);
+                        }     
+                    }
+                    currentX = 0;
+                }
+            }
+
+            // casting superbitmap to a image for saving on disk
+            Image superImage = (Image)superBitmap;
+            try
+            {
+                superImage.Save(@"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\testIMG\test" + iterates + ".png");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         // method meant for testing lat long data files
