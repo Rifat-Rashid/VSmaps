@@ -215,7 +215,7 @@ namespace GaussianMapRender
                 }               
             }
             Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
-            //Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
+            Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
         }
 
         // method meant for testing lat long data files
