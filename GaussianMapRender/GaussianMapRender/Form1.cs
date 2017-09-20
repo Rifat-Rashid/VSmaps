@@ -163,47 +163,18 @@ namespace GaussianMapRender
             // calculate ratios (meters per pixel?)
             double ratio = screenDistance / bitmapWidth; // meters/pixels
             Console.WriteLine(screenDistance);
-
-            // print results
-            /*
-            Console.WriteLine("Matrix Shift: " + distance / ratio);
-                    Bitmap b = new Bitmap((int)Math.Ceiling(distance/ratio), (int)Math.Ceiling(distance/ratio));
-                    Graphics g = Graphics.FromImage(b);
-                    Color c = Color.FromArgb(255, 255, 0, 0);
-                    Brush brush = new SolidBrush(c);///@replace
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
-                    //Console.WriteLine(alphaValues[i + j]);
-                    GMapOverlay markers = new GMapOverlay("markers");
-                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(firstCoordinate.X, firstCoordinate.Y),
-                        b);
-                    markers.Markers.Add(marker);
-                    gmap.Overlays.Add(markers);
-                    */
-
-            // code above is jank. Dont uncomment unless told to do so - Rifat
-
-
             Console.WriteLine(width + " " + height);
+
+            Bitmap[,] preStitchedCollection = new Bitmap[lats.Count, lngs.Count];
+
             for (int i = 0; i < lats.Count; i++)
             {
-                miniBitmaps.Add(new List<Bitmap>());
+                //miniBitmaps.Add(new List<Bitmap>());
                 for (int j = 0; j < lngs.Count; j++)
                 {
-                    // JANK BITMAP CREATION CODE
-                    /*Bitmap b = new Bitmap(width, height);
-                    Graphics g = Graphics.FromImage(b);
-                    Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
-                    Brush brush = new SolidBrush(c);///@replace
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
-                    //Console.WriteLine(alphaValues[i + j]);
-                    GMapOverlay markers = new GMapOverlay("markers");
-                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(rectangle((int) alphaValues[i + j], width, height)));
-                    markers.Markers.Add(marker);
-                    gmap.Overlays.Add(markers);*/
-
                     // add bitmap to collection for stitching process
-                    miniBitmaps[i].Add(rectangle((int)alphaValues[i + j], width, height));
+                    preStitchedCollection[i, j] = getAlphaMap((int)alphaValues[i + j], width, height);
+                    //miniBitmaps[i].Add(rectangle((int)alphaValues[i + j], width, height));
                 }
             }
             // FIX STITCHED BITMAP TO INCORPORATE List<List<Bitmap>>
@@ -253,14 +224,6 @@ namespace GaussianMapRender
             double max = P.getMax(alphaValues);
             P.scale(alphaValues);
 
-            /*for(int i = 0; i < lats.Count; i++)
-            {
-                for(int j = 0; j < lngs.Count; j++)
-                {
-                    PointF p = new PointF((float)lats[i], (float)lngs[j]);
-                    addGPSPoint(p);
-                }
-            }*/
             Image img = getGmapImage();
             RenderBitmaps(lats, lngs, alphaValues, img);
 
@@ -276,7 +239,15 @@ namespace GaussianMapRender
             g.FillEllipse(b, 0, 0, width, height);
             return bmp;
         }
-        private Bitmap rectangle(double alphaValue, int width, int height)
+
+        /// <summary>
+        /// creates bitmap with size width, height and fills it in with passed in alpha value
+        /// </summary>
+        /// <param name="alphaValue"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns>returns type BitMap</returns>
+        public Bitmap getAlphaMap(double alphaValue, int width, int height)
         {
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
