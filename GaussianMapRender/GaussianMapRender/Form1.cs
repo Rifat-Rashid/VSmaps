@@ -97,7 +97,7 @@ namespace GaussianMapRender
         }
         private void RenderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
-            List<List<Bitmap>> miniBitmaps = new List<List<Bitmap>>();
+            List<Bitmap> miniBitmaps = new List<Bitmap>();
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
             PointF botLeft = new PointF();
@@ -186,7 +186,6 @@ namespace GaussianMapRender
             Console.WriteLine(width + " " + height);
             for (int i = 0; i < lats.Count; i++)
             {
-                miniBitmaps.Add(new List<Bitmap>());
                 for (int j = 0; j < lngs.Count; j++)
                 {
                     // JANK BITMAP CREATION CODE
@@ -203,26 +202,26 @@ namespace GaussianMapRender
                     gmap.Overlays.Add(markers);*/
 
                     // add bitmap to collection for stitching process
-                    miniBitmaps[i].Add(rectangle((int)alphaValues[i + j], width, height));
+                    miniBitmaps.Add(rectangle((int)alphaValues[i + j], width, height));
                 }
             }
-            // FIX STITCHED BITMAP TO INCORPORATE List<List<Bitmap>>
+
             StitchedBitmap(miniBitmaps);
         }
 
-        public void StitchedBitmap(List<List<Bitmap>> bitmapCollection)
+        public void StitchedBitmap(List<Bitmap> bitmapCollection)
         {
             // width and height can be calculated ahead of time @bitmapCollection creation
             int totalWidth = 0;
             int totalHeight = 0;
 
             // loop through collection to find width and height of newly created bitmap
-            for (int i = 0; i < bitmapCollection[0].Count; i++)
+            for (int i = 0; i < bitmapCollection.Count; i++)
             {
                 try
                 {
-                    totalWidth += bitmapCollection[0][i].Width;
-                    totalHeight += bitmapCollection[0][i].Height;
+                    totalWidth += bitmapCollection[i].Width;
+                    totalHeight += bitmapCollection[i].Height;
                 }catch(NullReferenceException nullRefrenceException)
                 {
                     Console.WriteLine("Null refrence in bitmap stitching method");
