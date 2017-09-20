@@ -97,7 +97,6 @@ namespace GaussianMapRender
         }
         private void RenderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
-            List<List<Bitmap>> miniBitmaps = new List<List<Bitmap>>();
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
             PointF botLeft = new PointF();
@@ -150,9 +149,6 @@ namespace GaussianMapRender
             Console.WriteLine("Distance between coord1 and 2: " + distance);
             Console.WriteLine("screen distance: " + screenDistance);
 
-            // print check
-            //Console.WriteLine("Distance: " + distance);
-
             // GET screen dimensions
             Image bitmap = gmap.ToImage();
             double bitmapWidth = bitmap.Width;
@@ -166,19 +162,16 @@ namespace GaussianMapRender
             Console.WriteLine(width + " " + height);
 
             Bitmap[,] preStitchedCollection = new Bitmap[lats.Count, lngs.Count];
-
             for (int i = 0; i < lats.Count; i++)
             {
-                //miniBitmaps.Add(new List<Bitmap>());
                 for (int j = 0; j < lngs.Count; j++)
                 {
                     // add bitmap to collection for stitching process
                     preStitchedCollection[i, j] = getAlphaMap((int)alphaValues[i + j], width, height);
-                    //miniBitmaps[i].Add(rectangle((int)alphaValues[i + j], width, height));
                 }
             }
-            // FIX STITCHED BITMAP TO INCORPORATE List<List<Bitmap>>
-            StitchedBitmap(miniBitmaps);
+
+            StitchedBitmap(preStitchedCollection);
         }
 
         
@@ -218,7 +211,6 @@ namespace GaussianMapRender
                     }
                 }               
             }
-            Debug.WriteLine("bitmapCollection Size" + bitmapCollection.GetUpperBound))
             Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
             //Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
         }
