@@ -181,30 +181,44 @@ namespace GaussianMapRender
             StitchedBitmap(miniBitmaps);
         }
 
-        public void StitchedBitmap(List<List<Bitmap>> bitmapCollection)
+        
+        public void StitchedBitmap(Bitmap[,] bitmapCollection)
         {
             // width and height can be calculated ahead of time @bitmapCollection creation
             int totalWidth = 0;
             int totalHeight = 0;
 
+            // GetUpperBound() method is very slow. Call this once outside of loop to save time.
+            int bitmapCollectionI = bitmapCollection.GetUpperBound(0);
+            int bitmapCollectionJ = bitmapCollection.GetUpperBound(1);
+
             // loop through collection to find width and height of newly created bitmap
-            for (int i = 0; i < bitmapCollection[0].Count; i++)
+            for (int i = 0; i <= bitmapCollectionI; i++)
             {
-                try
+                for(int j = 0; j <= bitmapCollectionJ; j++)
                 {
-                    totalWidth += bitmapCollection[0][i].Width;
-                    totalHeight += bitmapCollection[0][i].Height;
-                }catch(NullReferenceException nullRefrenceException)
-                {
-                    Console.WriteLine("Null refrence in bitmap stitching method");
-                    Console.WriteLine(nullRefrenceException.ToString());
-                }
-                catch(Exception e)  // for generic exceptions
-                {
-                    Console.WriteLine("Generic exception");
-                    Console.WriteLine(e.ToString());
-                }
+                    try
+                    {
+                        // counting width (i)
+                        if(i == 0)
+                            totalWidth += bitmapCollection[i,j].Width;
+                        // counting height (j)
+                        if(j == 0)
+                            totalHeight += bitmapCollection[i,j].Height;
+                    }
+                    catch (NullReferenceException nullRefrenceException)
+                    {
+                        Console.WriteLine("Null refrence in bitmap stitching method");
+                        Console.WriteLine(nullRefrenceException.ToString());
+                    }
+                    catch (Exception e)  // for generic exceptions
+                    {
+                        Console.WriteLine("Generic exception");
+                        Console.WriteLine(e.ToString());
+                    }
+                }               
             }
+            Debug.WriteLine("bitmapCollection Size" + bitmapCollection.GetUpperBound))
             Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
             //Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
         }
