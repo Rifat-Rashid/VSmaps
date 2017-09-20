@@ -172,7 +172,6 @@ namespace GaussianMapRender
             }
 
             StitchedBitmap(preStitchedCollection);
-            RenderBitmapsHelper(preStitchedCollection, alphaValues, lats, lngs);
         }
 
         /// <summary>
@@ -217,28 +216,6 @@ namespace GaussianMapRender
             }
             Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
             Bitmap stitchedBitmap = new Bitmap(totalWidth, totalHeight);
-        }
-
-        // METHOD TO RENDER EACH INVIDUAL BITMAP
-        public void RenderBitmapsHelper(Bitmap[,] preStitchedCollection, List<double> alphaValues, List<double> lats,
-            List<double> lngs)
-        {
-            for (int i = 0; i < preStitchedCollection.GetLength(0); i++)
-            {
-                for (int j = 0; j < preStitchedCollection.GetLength(1); j++)
-                {
-                    Bitmap b = preStitchedCollection[i, j];
-                    Graphics g = Graphics.FromImage(b);
-                    Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
-                    Brush brush = new SolidBrush(c);
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
-                    GMapOverlay markers = new GMapOverlay("markers");
-                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(b));
-                    markers.Markers.Add(marker);
-                    gmap.Overlays.Add(markers);
-                }
-            }
         }
 
         // method meant for testing lat long data files
