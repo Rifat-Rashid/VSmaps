@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace GaussianMapRender
         public ParserManager()
         {
             this.coordinateParser = new CoordinateParser(@"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\lat.txt", @"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\long.txt");
-            this.alphaValueParser = new AlphaValueParser(@"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\p_1.txt");
+            this.alphaValueParser = new AlphaValueParser(@"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\p_20.txt");
         }
 
         public void execute()
@@ -55,16 +56,17 @@ namespace GaussianMapRender
         }
 		public double getMin(List<double> a)
 		{
-			double min = 0;
+			double min = a[0];
 			for (int i = 0; i < a.Count; i++)
 			{
 				min = (min >= a[i]) ? a[i] : min;
 			}
+            Console.WriteLine("Absolute min: " + min);
 			return min;
 		}
 		public double getMax(List<double> a)
 		{
-            double max = 0;
+            double max = a[0];
             double index = 0;
             for (int i = 0; i < a.Count; i++)
             {
@@ -82,7 +84,8 @@ namespace GaussianMapRender
 			for (int i = 0; i < alphaValues.Count; i++)
 			{
                 alphaValues[i] = scale * alphaValues[i];
-			}
+                //File.AppendAllText("C:/Users/Rashid/Documents/GitHub/VSmaps/Data/debug logs/log.txt", );
+            }
 		}
         public double scaleAlphaValue(List<double> alphaValues)
         {
@@ -92,6 +95,7 @@ namespace GaussianMapRender
             double probabilityMin = getMin(alphaValues);
 
             double m = (alphaMax - alphaMin) / (probabilityMax - probabilityMin);
+            //double m = (probabilityMax - probabilityMin) / (alphaMax - alphaMin);
 
             return m;
         }

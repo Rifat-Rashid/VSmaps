@@ -162,13 +162,16 @@ namespace GaussianMapRender
             Console.WriteLine(width + " " + height);
 
             Bitmap[,] preStitchedCollection = new Bitmap[lats.Count, lngs.Count];
+            int count = 0;
             for (int i = 0; i < lats.Count; i++)
             {
                 for (int j = 0; j < lngs.Count; j++)
                 {
                     // add bitmap to collection for stitching process
-                    preStitchedCollection[i, j] = getAlphaMap((int)alphaValues[i + j], width, height);
+                    preStitchedCollection[i, j] = getAlphaMap((int)alphaValues[count], width, height);
+                    count++;
                 }
+                //count++;
             }
 
             StitchedBitmap(preStitchedCollection);
