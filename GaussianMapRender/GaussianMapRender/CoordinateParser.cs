@@ -23,7 +23,6 @@ namespace GaussianMapRender
         {
             this.LatitudeFilePath = latitudeFilePath;
             this.LongitudeFilePath = longitudeFilePath;
-
             LatitudeCoordinates = new List<double>();
             LongitudeCoordinates = new List<double>();
         }
@@ -33,7 +32,6 @@ namespace GaussianMapRender
         {
             string latitudeData = System.IO.File.ReadAllText(LatitudeFilePath);
             string longitudeData = System.IO.File.ReadAllText(LongitudeFilePath);
-
             string[] tempLat = latitudeData.Split(',');
             string[] tempLng = longitudeData.Split(',');
 
@@ -66,7 +64,6 @@ namespace GaussianMapRender
             }
             Console.WriteLine("LATITUDE COORDINATES >>> " + counter1);
             Console.WriteLine("LONGITUDE COORDINATES >>> " + counter2);
-
         }
 
         public List<double> getLatitudeCoordinates()
