@@ -35,7 +35,6 @@ namespace GaussianMapRender
             gmap.SetPositionByKeywords(DEFAULT_LOCATION);
             gmap.ShowCenter = false;
             gmap.Zoom = 5;
-            //TestDataFiles();
         }
 
         private void gmap_Load(object sender, EventArgs e)
@@ -56,45 +55,11 @@ namespace GaussianMapRender
             return img;
         }
 
-        private void saveGMapToDisk(String filePath)
-        {
-            Image g = gmap.ToImage();
-            try
-            {
-                g.Save(@"C:\Users\ZachCheu\Desktop\test.png");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void userDialogBox()
-        {
-            using (var folderDialog = new FolderBrowserDialog())
-            {
-                if (folderDialog.ShowDialog() == DialogResult.OK)
-                {
-                    Console.WriteLine("Selected Path: " + folderDialog.SelectedPath);
-                }
-            }
-        }
-
         private void openDialog_button_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void addGPSPoint(PointF point)
-        {
-            int iconWidth = 5;  // icon width
-            int iconHeight = 5; // icon height
-            GMapOverlay markers = new GMapOverlay("markers");
-            GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(point.X, point.Y),
-             new Bitmap(circle(iconWidth, iconHeight)));
-            markers.Markers.Add(marker);
-            gmap.Overlays.Add(markers);
-        }
         private void RenderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
             PointF topLeft = new PointF();
@@ -114,10 +79,7 @@ namespace GaussianMapRender
             Console.WriteLine("TR: " + topRight.ToString());
             Console.WriteLine("BR: " + botRight.ToString());
             Console.WriteLine("BL: " + botLeft.ToString());
-
-
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
-            //test
             // first param: start latitude
             // second param: start longitude
             // third param: end latitude
@@ -128,38 +90,7 @@ namespace GaussianMapRender
             double heightDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[1], (float)lngs[0]);
             double maxHeightDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[lats.Count - 1], lngs[0]);
             int width = (int)bitmapCalculator.calculateBitmapWidth(widthDistance, maxWidthDistance, img.Width);
-            int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);
-            //---------------------------------------------------------------------------------------------------------
-            // test logic v0.0.1
-            PointF firstCoordinate = new PointF((float)lats[0], (float)lngs[0]);
-            PointF secondCoordinate = new PointF((float)lats[0], (float)lngs[1]);
-
-            // calculate distance
-            GeoCoordinate coord_1 = new GeoCoordinate(firstCoordinate.X, firstCoordinate.Y);
-            GeoCoordinate coord_2 = new GeoCoordinate(secondCoordinate.X, secondCoordinate.Y);
-
-            GeoCoordinate coord_3 = new GeoCoordinate(topLeft.Y, topLeft.X);
-            GeoCoordinate coord_4 = new GeoCoordinate(topRight.Y, topRight.X);
-
-            // returns distance in meters accroding to docs
-            // @docs: https://msdn.microsoft.com/en-us/library/system.device.location.geocoordinate.getdistanceto(v=vs.110).aspx
-            double distance = coord_1.GetDistanceTo(coord_2);
-            double screenDistance = coord_3.GetDistanceTo(coord_4);
-
-            Console.WriteLine("Distance between coord1 and 2: " + distance);
-            Console.WriteLine("screen distance: " + screenDistance);
-
-            // GET screen dimensions
-            Image bitmap = gmap.ToImage();
-            double bitmapWidth = bitmap.Width;
-            double bitmapHeight = bitmap.Height;
-
-            Console.WriteLine("BITMAP WIDTH: " + bitmapWidth);
-
-            // calculate ratios (meters per pixel?)
-            double ratio = screenDistance / bitmapWidth; // meters/pixels
-            Console.WriteLine(screenDistance);
-            Console.WriteLine(width + " " + height);
+            int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);           
 
             Bitmap[,] preStitchedCollection = new Bitmap[lats.Count, lngs.Count];
             int count = 0;
@@ -171,7 +102,6 @@ namespace GaussianMapRender
                     preStitchedCollection[i, j] = getAlphaMap((int)alphaValues[count], width, height);
                     count++;
                 }
-                //count++;
             }
 
             StitchedBitmap(preStitchedCollection);
@@ -263,7 +193,6 @@ namespace GaussianMapRender
         {
             string URL = @"C:\Users\DevWork\Desktop\";
             string URL_ALPHA_VALUES = URL + "1.txt";
-
             ParserManager P = new ParserManager();
             P.execute();
             List<double> lats = P.latitudeValues;
@@ -272,10 +201,8 @@ namespace GaussianMapRender
             double min = P.getMin(alphaValues);
             double max = P.getMax(alphaValues);
             P.scale(alphaValues);
-
             Image img = getGmapImage();
             RenderBitmaps(lats, lngs, alphaValues, img);
-
         }
 
         // returns bitmap: circle img
