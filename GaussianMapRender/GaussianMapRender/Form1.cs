@@ -188,6 +188,16 @@ namespace GaussianMapRender
             }
         }
 
+        /// <summary>
+        /// superImage object will be overlayed on gmap.ToImage() object
+        /// </summary>
+        /// <param name="superImage">image that will be overlayed on map</param>
+        public void MapOverlay(Image superImage)
+        {
+            Image mapImage = gmap.ToImage();
+
+        }
+
         // method meant for testing lat long data files
         public void TestDataFiles()
         {
