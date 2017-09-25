@@ -14,6 +14,7 @@ using GMap.NET;
 using System.Threading;
 using System.Collections;
 using System.Device.Location;
+using System.Diagnostics;
 
 namespace GaussianMapRender
 {
@@ -34,7 +35,6 @@ namespace GaussianMapRender
             gmap.SetPositionByKeywords(DEFAULT_LOCATION);
             gmap.ShowCenter = false;
             gmap.Zoom = 5;
-            //TestDataFiles();
         }
 
         private void gmap_Load(object sender, EventArgs e)
@@ -45,17 +45,6 @@ namespace GaussianMapRender
         private void SaveMap_Click(object sender, EventArgs e)
         {
             TestDataFiles();
-            /*
-            Image g = gmap.ToImage();
-            try
-            {
-                g.Save(@"C:\Users\tejas\Desktop\source.png");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            */
         }
 
         public Image getGmapImage()
@@ -66,48 +55,13 @@ namespace GaussianMapRender
             return img;
         }
 
-        private void saveGMapToDisk(String filePath)
-        {
-            Image g = gmap.ToImage();
-            try
-            {
-                g.Save(@"C:\Users\ZachCheu\Desktop\test.png");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void userDialogBox()
-        {
-            using (var folderDialog = new FolderBrowserDialog())
-            {
-                if (folderDialog.ShowDialog() == DialogResult.OK)
-                {
-                    Console.WriteLine("Selected Path: " + folderDialog.SelectedPath);
-                }
-            }
-        }
-
         private void openDialog_button_Click(object sender, EventArgs e)
         {
-           
+
         }
 
-        private void addGPSPoint(PointF point)
+        private void RenderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
         {
-            int iconWidth = 5;  // icon width
-            int iconHeight = 5; // icon height
-            GMapOverlay markers = new GMapOverlay("markers");
-            GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(point.X, point.Y),
-             new Bitmap(circle(iconWidth, iconHeight)));
-            markers.Markers.Add(marker);
-            gmap.Overlays.Add(markers);
-        }
-        private void renderBitmaps(List<double> lats, List<double> lngs, List<double> alphaValues, Image img)
-        {
-            List<Bitmap> miniBitmaps = new List<Bitmap>();
             PointF topLeft = new PointF();
             PointF topRight = new PointF();
             PointF botLeft = new PointF();
@@ -125,10 +79,7 @@ namespace GaussianMapRender
             Console.WriteLine("TR: " + topRight.ToString());
             Console.WriteLine("BR: " + botRight.ToString());
             Console.WriteLine("BL: " + botLeft.ToString());
-
-
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
-            //test
             // first param: start latitude
             // second param: start longitude
             // third param: end latitude
@@ -139,78 +90,102 @@ namespace GaussianMapRender
             double heightDistance = bitmapCalculator.calculateDistance((float)lats[0], (float)lngs[0], (float)lats[1], (float)lngs[0]);
             double maxHeightDistance = bitmapCalculator.calculateDistance(lats[0], lngs[0], lats[lats.Count - 1], lngs[0]);
             int width = (int)bitmapCalculator.calculateBitmapWidth(widthDistance, maxWidthDistance, img.Width);
-            int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);
-            //---------------------------------------------------------------------------------------------------------
-            // test logic v0.0.1
-            PointF firstCoordinate = new PointF((float)lats[0], (float)lngs[0]);
-            PointF secondCoordinate = new PointF((float)lats[0], (float)lngs[1]);
+            int height = (int)bitmapCalculator.calculateBitmapHeight(heightDistance, maxHeightDistance, img.Height);           
 
-            // calculate distance
-            GeoCoordinate coord_1 = new GeoCoordinate(firstCoordinate.X, firstCoordinate.Y);
-            GeoCoordinate coord_2 = new GeoCoordinate(secondCoordinate.X, secondCoordinate.Y);
-
-            GeoCoordinate coord_3 = new GeoCoordinate(topLeft.Y, topLeft.X);
-            GeoCoordinate coord_4 = new GeoCoordinate(topRight.Y, topRight.X);
-            // returns distance in meters accroding to docs
-            // @docs: https://msdn.microsoft.com/en-us/library/system.device.location.geocoordinate.getdistanceto(v=vs.110).aspx
-            double distance = coord_1.GetDistanceTo(coord_2);
-            double screenDistance = coord_3.GetDistanceTo(coord_4);
-
-            Console.WriteLine("Distance between coord1 and 2: "+ distance);
-            Console.WriteLine("screen distance: " + screenDistance);
-
-            // print check
-            //Console.WriteLine("Distance: " + distance);
-
-            // GET screen dimensions
-            Image bitmap = gmap.ToImage();
-            double bitmapWidth = bitmap.Width;
-            double bitmapHeight = bitmap.Height;
-
-            Console.WriteLine("BITMAP WIDTH: " + bitmapWidth);
-
-            // calculate ratios (meters per pixel?)
-            double ratio = screenDistance/bitmapWidth; // meters/pixels
-            Console.WriteLine(screenDistance);
-
-            // print results
-            Console.WriteLine("Matrix Shift: " + distance / ratio);
-                    Bitmap b = new Bitmap((int)Math.Ceiling(distance/ratio), (int)Math.Ceiling(distance/ratio));
-                    Graphics g = Graphics.FromImage(b);
-                    Color c = Color.FromArgb(255, 255, 0, 0);
-                    Brush brush = new SolidBrush(c);///@replace
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
-                    //Console.WriteLine(alphaValues[i + j]);
-                    GMapOverlay markers = new GMapOverlay("markers");
-                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(firstCoordinate.X, firstCoordinate.Y),
-                        b);
-                    markers.Markers.Add(marker);
-                    gmap.Overlays.Add(markers);
-
-            
-
-            Console.WriteLine(width + " " + height);
+            Bitmap[,] preStitchedCollection = new Bitmap[lats.Count, lngs.Count];
+            int count = 0;
             for (int i = 0; i < lats.Count; i++)
             {
                 for (int j = 0; j < lngs.Count; j++)
                 {
-                    // JANK BITMAP CREATION CODE
-                    /*Bitmap b = new Bitmap(width, height);
-                    Graphics g = Graphics.FromImage(b);
-                    Color c = Color.FromArgb((int)Math.Round(alphaValues[i + j]), 255, 0, 0);
-                    Brush brush = new SolidBrush(c);///@replace
-                    g.FillRectangle(brush, 0, 0, b.Width, b.Height);
-                    //Console.WriteLine(alphaValues[i + j]);
-                    GMapOverlay markers = new GMapOverlay("markers");
-                    GMarkerGoogle marker = new GMarkerGoogle(new PointLatLng(lats[i], lngs[j]),
-                        new Bitmap(rectangle((int) alphaValues[i + j], width, height)));
-                    markers.Markers.Add(marker);
-                    gmap.Overlays.Add(markers);*/
-
-                    miniBitmaps.Add(rectangle((int)alphaValues[i + j], width, height));
+                    // add bitmap to collection for stitching process
+                    preStitchedCollection[i, j] = getAlphaMap((int)alphaValues[count], width, height);
+                    count++;
                 }
             }
-            
+
+            StitchedBitmap(preStitchedCollection);
+        }
+
+        /// <summary>
+        /// Given a 2D array of segmented bitmaps, this method will stitch all of them together into one super bitmap.
+        /// </summary>
+        /// <param name="bitmapCollection">2D Array of segmented bitmaps</param>
+        public void StitchedBitmap(Bitmap[,] bitmapCollection)
+        {
+            // width and height can be calculated ahead of time @bitmapCollection creation
+            int totalWidth = 0;
+            int totalHeight = 0;
+
+            // GetUpperBound() method is very slow. Call this once outside of loop to save time.
+            int bitmapCollectionI = bitmapCollection.GetUpperBound(0);
+            int bitmapCollectionJ = bitmapCollection.GetUpperBound(1);
+
+            // loop through collection to find width and height of newly created bitmap
+            for (int i = 0; i <= bitmapCollectionI; i++)
+            {
+                for (int j = 0; j <= bitmapCollectionJ; j++)
+                {
+                    try
+                    {
+                        // counting width (i)
+                        if (i == 0)
+                            totalWidth += bitmapCollection[i, j].Width;
+                        // counting height (j)
+                        if (j == 0)
+                            totalHeight += bitmapCollection[i, j].Height;
+                    }
+                    catch (NullReferenceException nullRefrenceException)
+                    {
+                        Console.WriteLine("Null refrence in bitmap stitching method");
+                        Console.WriteLine(nullRefrenceException.ToString());
+                    }
+                    catch (Exception e)  // for generic exceptions
+                    {
+                        Console.WriteLine("Generic exception");
+                        Console.WriteLine(e.ToString());
+                    }
+                }
+            }
+            Debug.WriteLine("BitmapStitchedSize: W:" + totalWidth + " H:" + totalHeight);
+            Bitmap superBitmap = new Bitmap(totalWidth, totalHeight);
+            int currentY = 0;   // keeps track of y coordinate
+            int iterates = 0;
+
+            // loop for copying micro bitmaps onto super bitmap
+            // @SOURCE: https://stackoverflow.com/questions/9616617/c-sharp-copy-paste-an-image-region-into-another-image
+            using (Graphics g = Graphics.FromImage(superBitmap))
+            {
+                g.FillRectangle(new SolidBrush(Color.White), 0, 0, totalWidth, totalHeight);
+                // copy bitmap collection onto super bitmap
+                for (int i = 0; i <= bitmapCollectionI; i++)
+                {
+                    int currentX = 0;   // keeps track of x coordinate
+                    for (int j = 0; j <= bitmapCollectionJ; j++)
+                    {
+                        Bitmap sampledBitmap = bitmapCollection[i, j];
+                        g.DrawImage(sampledBitmap, currentX, currentY);
+                        currentX += sampledBitmap.Width;
+                        if (j == bitmapCollectionJ)
+                        {
+                            currentY += sampledBitmap.Height;
+                            Console.WriteLine(currentY);
+                        }     
+                    }
+                    currentX = 0;
+                }
+            }
+
+            // casting superbitmap to a image for saving on disk
+            Image superImage = (Image)superBitmap;
+            try
+            {
+                superImage.Save(@"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\testIMG\test" + iterates + ".png");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         // method meant for testing lat long data files
@@ -218,7 +193,6 @@ namespace GaussianMapRender
         {
             string URL = @"C:\Users\DevWork\Desktop\";
             string URL_ALPHA_VALUES = URL + "1.txt";
-
             ParserManager P = new ParserManager();
             P.execute();
             List<double> lats = P.latitudeValues;
@@ -227,18 +201,8 @@ namespace GaussianMapRender
             double min = P.getMin(alphaValues);
             double max = P.getMax(alphaValues);
             P.scale(alphaValues);
-
-            /*for(int i = 0; i < lats.Count; i++)
-            {
-                for(int j = 0; j < lngs.Count; j++)
-                {
-                    PointF p = new PointF((float)lats[i], (float)lngs[j]);
-                    addGPSPoint(p);
-                }
-            }*/
             Image img = getGmapImage();
-            renderBitmaps(lats, lngs, alphaValues, img);
-
+            RenderBitmaps(lats, lngs, alphaValues, img);
         }
 
         // returns bitmap: circle img
@@ -251,7 +215,15 @@ namespace GaussianMapRender
             g.FillEllipse(b, 0, 0, width, height);
             return bmp;
         }
-        private Bitmap rectangle(double alphaValue, int width, int height)
+
+        /// <summary>
+        /// creates bitmap with size width, height and fills it in with passed in alpha value
+        /// </summary>
+        /// <param name="alphaValue"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns>returns type BitMap</returns>
+        public Bitmap getAlphaMap(double alphaValue, int width, int height)
         {
             Bitmap bmp = new Bitmap(width, height);
             Graphics g = Graphics.FromImage(bmp);
