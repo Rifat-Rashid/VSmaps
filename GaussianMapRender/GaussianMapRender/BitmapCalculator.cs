@@ -18,7 +18,6 @@ namespace GaussianMapRender
         {
             GeoCoordinate coord_1 = new GeoCoordinate(startLat, startLng);
             GeoCoordinate coord_2 = new GeoCoordinate(endLat, endLng);
-
             return coord_1.GetDistanceTo(coord_2);
         }
         public double calculateBitmapWidth(double distance, double maxDistance, double imageWidth)

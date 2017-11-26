@@ -79,6 +79,7 @@ namespace GaussianMapRender
             Console.WriteLine("TR: " + topRight.ToString());
             Console.WriteLine("BR: " + botRight.ToString());
             Console.WriteLine("BL: " + botLeft.ToString());
+            RenderComputeTests(topLeft, topRight, lats, lngs);
             BitmapCalculator bitmapCalculator = new BitmapCalculator();
             // first param: start latitude
             // second param: start longitude
@@ -105,6 +106,14 @@ namespace GaussianMapRender
             }
 
             StitchedBitmap(preStitchedCollection);
+        }
+
+        public void RenderComputeTests(PointF firstCoordinate, PointF secondCoordinate, List<double> lats, List<double> lngs)
+        {
+            BitmapCalculator b = new BitmapCalculator();
+            double distanceBetweenCoordinates = b.calculateDistance(firstCoordinate.Y, firstCoordinate.X, secondCoordinate.Y, secondCoordinate.X);
+            Console.WriteLine("DISTANCE BETWEEN COORDINATES TOP RIGHT AND TOP LEFT IS: " + distanceBetweenCoordinates);
+            Console.WriteLine("LAT OF FIRST COORD: " + lats[0] + "LNG OF FIRST: " + lngs[0]);
         }
 
         /// <summary>
