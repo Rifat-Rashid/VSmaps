@@ -156,7 +156,7 @@ namespace GaussianMapRender
             // @SOURCE: https://stackoverflow.com/questions/9616617/c-sharp-copy-paste-an-image-region-into-another-image
             using (Graphics g = Graphics.FromImage(superBitmap))
             {
-                g.FillRectangle(new SolidBrush(Color.White), 0, 0, totalWidth, totalHeight);
+                //g.FillRectangle(new SolidBrush(Color.White), 0, 0, totalWidth, totalHeight);
                 // copy bitmap collection onto super bitmap
                 for (int i = 0; i <= bitmapCollectionI; i++)
                 {
@@ -180,12 +180,21 @@ namespace GaussianMapRender
             Image superImage = (Image)superBitmap;
             try
             {
-                superImage.Save(@"C:\Users\Rashid\Documents\GitHub\VSmaps\Data\testIMG\test" + iterates + ".png");
+                superImage.Save(@"C:\Users\DevWork\Desktop\VSmaps\Data\432.png");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// superImage object will be overlayed on gmap.ToImage() object
+        /// </summary>
+        /// <param name="superImage">image that will be overlayed on map</param>
+        public void MapOverlay(Image superImage)
+        {
+            Image mapImage = gmap.ToImage();
         }
 
         // method meant for testing lat long data files
