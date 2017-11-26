@@ -195,7 +195,6 @@ namespace GaussianMapRender
         public void MapOverlay(Image superImage)
         {
             Image mapImage = gmap.ToImage();
-
         }
 
         // method meant for testing lat long data files
