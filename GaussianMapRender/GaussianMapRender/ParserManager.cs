@@ -22,8 +22,8 @@ namespace GaussianMapRender
 
         public ParserManager()
         {
-            this.coordinateParser = new CoordinateParser(@"C:\Users\DevWork\Desktop\VSmaps\Data\lat.txt", @"C:\Users\DevWork\Desktop\VSmaps\Data\long.txt");
-            this.alphaValueParser = new AlphaValueParser(@"C:\Users\DevWork\Desktop\VSmaps\Data\p_1.txt");
+            this.coordinateParser = new CoordinateParser(@"C:\Users\Dev\Documents\GitHub\VSmaps\Data\lat.txt", @"C:\Users\Dev\Documents\GitHub\VSmaps\Data\long.txt");
+            this.alphaValueParser = new AlphaValueParser(@"C:\Users\Dev\Documents\GitHub\VSmaps\Data\p_1.txt");
         }
 
         public void execute()

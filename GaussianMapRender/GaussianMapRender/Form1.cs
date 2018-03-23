@@ -176,11 +176,16 @@ namespace GaussianMapRender
                 }
             }
 
+            GMapOverlay mar = new GMapOverlay("m");
+            GMapMarker m = new GMarkerGoogle(new PointLatLng(48.8617774, 2.349272), new Bitmap(@"C:\Users\Dev\Desktop\gtr.jpg"));
+            mar.Markers.Add(m);
+            gmap.Overlays.Add(mar);
+
             // casting superbitmap to a image for saving on disk
             Image superImage = (Image)superBitmap;
             try
             {
-                superImage.Save(@"C:\Users\DevWork\Desktop\VSmaps\Data\432.png");
+                superImage.Save(@"C:\Users\Dev\Desktop\432.png");
             }
             catch (Exception ex)
             {
